@@ -15,4 +15,7 @@
     <string name="photo_title_text">Title: %s</string>
     <string name="photo_tags_text">tags: %s</string>
     <string name="activity_search">Search</string>
+    <string name="string_activity_search">Search</string>
+    <string name="searchable_hint">Enter photo tags</string>
+    <string name="empty_photo_message">No photos match your search\n\n try to search somthing else</string>
 </resources>

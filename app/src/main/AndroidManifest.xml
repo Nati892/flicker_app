@@ -15,14 +15,23 @@
             android:name=".SearchActivity"
             android:exported="false"
             android:label="@string/title_activity_search"
-            android:theme="@style/Theme.FlickerLayout.NoActionBar" />
+            android:theme="@style/Theme.FlickerLayout.NoActionBar">
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+        </activity>
+
         <activity
             android:name=".PhotoDetailActivity"
             android:exported="false"
             android:label="PhotoDetailActivity"
-            android:theme="@style/Theme.FlickerLayout.NoActionBar"
             android:parentActivityName=".MainActivity"
-            />
+            android:theme="@style/Theme.FlickerLayout.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

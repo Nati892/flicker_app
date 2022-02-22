@@ -1,12 +1,14 @@
 package com.example.flickerlayout;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
@@ -45,10 +47,10 @@ public class MainActivity extends BaseActivity implements GetFlickerJsonData.OnD
         activateToolbar(false);
 
 
-        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.recycler_view);
-        recyclerView.addOnItemTouchListener( new RecyclerItemClickListener(this,recyclerView,this));
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mFlickerRecyclerViewAdapter=new FlickerRecyclerViewAdapter(new ArrayList<Photo>(), this);
+        mFlickerRecyclerViewAdapter = new FlickerRecyclerViewAdapter(new ArrayList<Photo>(), this);
         recyclerView.setAdapter(mFlickerRecyclerViewAdapter);
 
         Log.d(TAG, "onCreate: ends");
@@ -57,10 +59,16 @@ public class MainActivity extends BaseActivity implements GetFlickerJsonData.OnD
     @Override
     protected void onResume() {
         super.onResume();
-        GetFlickerJsonData getFlickerJsonData= new GetFlickerJsonData("https://www.flickr.com/services/feeds/photos_public.gne",
-                "en-us",true,this);
-        //getFlickerJsonData.executeOnSameThread("Android,cake");
-        getFlickerJsonData.execute("Android,cake");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String queryResult = sharedPreferences.getString(FLICKER_QUERY, "");
+        if (queryResult.length() > 0) {
+            GetFlickerJsonData getFlickerJsonData = new GetFlickerJsonData("https://www.flickr.com/services/feeds/photos_public.gne",
+                    "en-us", true, this);
+            getFlickerJsonData.execute(queryResult);
+        }
+
+
+        Log.d(TAG, "onResume: Ends");
     }
 
     @Override
@@ -86,6 +94,11 @@ public class MainActivity extends BaseActivity implements GetFlickerJsonData.OnD
             Log.d(TAG, "onOptionsItemSelected: ends");
             return true;
         }
+        if (id == R.id.action_search) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+            return true;
+        }
         Log.d(TAG, "onOptionsItemSelected: ends");
         return super.onOptionsItemSelected(item);
     }
@@ -96,32 +109,32 @@ public class MainActivity extends BaseActivity implements GetFlickerJsonData.OnD
 
         Log.d(TAG, "onSupportNavigateUp: ends");
 
-               super.onSupportNavigateUp();
-               return true;
+        super.onSupportNavigateUp();
+        return true;
     }
-@Override
-public void OnDataAvailable(List<Photo> data, DownloadStatus Status){
-    Log.d(TAG, "OnDataAvailable: starts");
-        if (Status==DownloadStatus.OK)
+
+    @Override
+    public void OnDataAvailable(List<Photo> data, DownloadStatus Status) {
+        Log.d(TAG, "OnDataAvailable: starts");
+        if (Status == DownloadStatus.OK)
             mFlickerRecyclerViewAdapter.loadNewData(data);
-        else
-        {
-            Log.e(TAG, "onDownloadComlete failed with status: "+ Status);
+        else {
+            Log.e(TAG, "onDownloadComlete failed with status: " + Status);
         }
-    Log.d(TAG, "OnDataAvailable: ends");
-}
+        Log.d(TAG, "OnDataAvailable: ends");
+    }
 
     @Override
     public void onItemClick(View view, int position) {
         Log.d(TAG, "onItemClick: starts");
-        Toast.makeText(this,"normal tap position: " + position,Toast.LENGTH_SHORT ).show();
+        Toast.makeText(this, "normal tap position: " + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onItemLongClick(View view, int position) {
         Log.d(TAG, "onItemLongClick: starts");
-        Intent intent=new Intent(this,PhotoDetailActivity.class);
-        intent.putExtra(PHOTO_TRANSFER,mFlickerRecyclerViewAdapter.getPhoto(position));
+        Intent intent = new Intent(this, PhotoDetailActivity.class);
+        intent.putExtra(PHOTO_TRANSFER, mFlickerRecyclerViewAdapter.getPhoto(position));
         startActivity(intent);
     }
 }

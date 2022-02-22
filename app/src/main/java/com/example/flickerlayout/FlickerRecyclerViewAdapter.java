@@ -37,15 +37,19 @@ public class FlickerRecyclerViewAdapter extends RecyclerView.Adapter<FlickerRecy
 
     @Override
     public void onBindViewHolder(@NonNull FlickerImageViewHolder holder, int position) {
-        Photo photoItem = mPhotoList.get(position);
-        Log.d(TAG, "onBindViewHolder: " + photoItem.getTitle() + " ----> " + position);
-        Picasso.get().load(photoItem.getImage())
-                .error(R.drawable.placeholder)
-                .placeholder(R.drawable.placeholder)
-                .into(holder.thumbnail);
-        if (holder.title!=null)
-        holder.title.setText(photoItem.getTitle());
-
+        if (mPhotoList==null || mPhotoList.size()==0){
+        holder.thumbnail.setImageResource(R.drawable.placeholder);
+        holder.title.setText(R.string.empty_photo_message);
+        }else {
+            Photo photoItem = mPhotoList.get(position);
+            Log.d(TAG, "onBindViewHolder: " + photoItem.getTitle() + " ----> " + position);
+            Picasso.get().load(photoItem.getImage())
+                    .error(R.drawable.placeholder)
+                    .placeholder(R.drawable.placeholder)
+                    .into(holder.thumbnail);
+            if (holder.title != null)
+                holder.title.setText(photoItem.getTitle());
+        }
     }
 
     @Override
@@ -53,7 +57,7 @@ public class FlickerRecyclerViewAdapter extends RecyclerView.Adapter<FlickerRecy
         if (mPhotoList != null)
             if (mPhotoList.size() != 0)
                 return mPhotoList.size();
-        return 0;
+        return 1;
     }
 
     public void loadNewData(List<Photo> newPhotos) {

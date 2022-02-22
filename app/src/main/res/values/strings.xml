@@ -11,4 +11,8 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_photo_detail">PhotoDetailActivity</string>
+    <string name="browse_image_description">Download filcker photo</string>
+    <string name="photo_title_text">Title: %s</string>
+    <string name="photo_tags_text">tags: %s</string>
+    <string name="activity_search">Search</string>
 </resources>
